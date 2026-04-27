@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    span.s1 {font: 12.0px 'PingFang SC'}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="zh-CN"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Zine Reader&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { margin: 0; padding: 0; background-color: #f4f4f4; display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: sans-serif; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* <span class="s1">控制栏样式</span> */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.controls { position: fixed; bottom: 20px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 10; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button { background: #000; color: #fff; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: 0.3s; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:hover { background: #444; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:disabled { background: #ccc; cursor: not-allowed; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.page-info { font-size: 14px; color: #333; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* <span class="s1">页面显示区域</span> */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>canvas { max-width: 95vw; max-height: 85vh; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); background: white; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;canvas id="pdf-render"&gt;&lt;/canvas&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="controls"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="prev-page"&gt;<span class="s1">上一页</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="page-info"&gt;<span class="s1">第</span> &lt;span id="page-num"&gt;&lt;/span&gt; / &lt;span id="page-count"&gt;&lt;/span&gt; <span class="s1">页</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="next-page"&gt;<span class="s1">下一页</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">自动识别链接里的参数，比如</span> ?book=1.pdf</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const urlParams = new URLSearchParams(window.location.search);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const pdfName = urlParams.get('book') || '1.pdf'; // <span class="s1">如果没写，默认加载</span> 1.pdf</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const pdfjsLib = window['pdfjs-dist/build/pdf'];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let pdfDoc = null, pageNum = 1, pageIsRendering = false, pageNumIsPending = null;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const scale = 2, canvas = document.querySelector('#pdf-render'), ctx = canvas.getContext('2d');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const renderPage = num =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pageIsRendering = true;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pdfDoc.getPage(num).then(page =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const viewport = page.getViewport({ scale });</p>
+<p class="p1"><span class="Apple-converted-space">                </span>canvas.height = viewport.height;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>canvas.width = viewport.width;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const renderCtx = { canvasContext: ctx, viewport: viewport };</p>
+<p class="p1"><span class="Apple-converted-space">                </span>page.render(renderCtx).promise.then(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>pageIsRendering = false;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (pageNumIsPending !== null) { renderPage(pageNumIsPending); pageNumIsPending = null; }</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.querySelector('#page-num').textContent = num;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const queueRenderPage = num =&gt; { if (pageIsRendering) { pageNumIsPending = num; } else { renderPage(num); } };</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelector('#prev-page').addEventListener('click', () =&gt; { if (pageNum &lt;= 1) return; pageNum--; queueRenderPage(pageNum); });</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelector('#next-page').addEventListener('click', () =&gt; { if (pageNum &gt;= pdfDoc.numPages) return; pageNum++; queueRenderPage(pageNum); });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">键盘翻页支持</span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.addEventListener('keydown', e =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (e.key === 'ArrowRight') document.querySelector('#next-page').click();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (e.key === 'ArrowLeft') document.querySelector('#prev-page').click();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// <span class="s1">加载</span> PDF</p>
+<p class="p1"><span class="Apple-converted-space">        </span>pdfjsLib.getDocument(pdfName).promise.then(pdfDoc_ =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pdfDoc = pdfDoc_;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.querySelector('#page-count').textContent = pdfDoc.numPages;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderPage(pageNum);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}).catch(err =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>alert("<span class="s1">错误：找不到文件</span> " + pdfName + "<span class="s1">，请确认文件名是否正确。</span>");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
