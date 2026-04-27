@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2487.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="zh-CN"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Online Zine Reader&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Helvetica Neue', Arial, sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #fafafa;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>flex-direction: column;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>.toolbar {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>gap: 15px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: #ffffff;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 12px 24px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 50px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 12px rgba(0,0,0,0.05);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>button, .file-upload-label {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #1a1a1a;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #ffffff;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 8px 16px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 14px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: background 0.2s ease;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:hover, .file-upload-label:hover {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #404040;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:disabled {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #cccccc;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cursor: not-allowed;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* 隐藏原生的文件上传按钮，用更美观的 label 替代 */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>input[type="file"] {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: none;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>.page-info {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 14px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #333;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 500;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>.canvas-container {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>#pdf-render {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 10px 30px rgba(0,0,0,0.1);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: auto;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>/* 给纸张一点温暖的质感颜色底色 */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #fffdf9;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="toolbar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label class="file-upload-label" for="pdf-upload"&gt;上传 Zine (PDF)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="file" id="pdf-upload" accept="application/pdf" /&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="prev-page" disabled&gt;◀ 上一页&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="page-info"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span id="page-num"&gt;0&lt;/span&gt; / &lt;span id="page-count"&gt;0&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="next-page" disabled&gt;下一页 ▶&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="canvas-container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;canvas id="pdf-render"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 配置 PDF.js 的 worker 路径</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const pdfjsLib = window['pdfjs-dist/build/pdf'];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let pdfDoc = null,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pageNum = 1,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pageIsRendering = false,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pageNumIsPending = null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const scale = 1.5; // 控制渲染清晰度，数值越大越清晰但也越耗内存</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const canvas = document.querySelector('#pdf-render');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const ctx = canvas.getContext('2d');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 渲染指定页面</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const renderPage = num =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pageIsRendering = true;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// 获取页面</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pdfDoc.getPage(num).then(page =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const viewport = page.getViewport({ scale });</p>
+<p class="p1"><span class="Apple-converted-space">                </span>canvas.height = viewport.height;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>canvas.width = viewport.width;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>const renderCtx = {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>canvasContext: ctx,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>viewport: viewport</p>
+<p class="p1"><span class="Apple-converted-space">                </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>page.render(renderCtx).promise.then(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>pageIsRendering = false;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (pageNumIsPending !== null) {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>renderPage(pageNumIsPending);</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>pageNumIsPending = null;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// 更新当前页码显示</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.querySelector('#page-num').textContent = num;</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// 更新按钮状态</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.querySelector('#prev-page').disabled = num &lt;= 1;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.querySelector('#next-page').disabled = num &gt;= pdfDoc.numPages;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 检查是否有待处理的渲染任务</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const queueRenderPage = num =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (pageIsRendering) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>pageNumIsPending = num;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>renderPage(num);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 上一页</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const showPrevPage = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (pageNum &lt;= 1) return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pageNum--;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>queueRenderPage(pageNum);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 下一页</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const showNextPage = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (pageNum &gt;= pdfDoc.numPages) return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pageNum++;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>queueRenderPage(pageNum);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 处理 PDF 上传</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelector('#pdf-upload').addEventListener('change', function(e) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const file = e.target.files[0];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (file.type !== 'application/pdf') {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>alert('请上传 PDF 格式的文件！');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const fileReader = new FileReader();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>fileReader.onload = function() {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const typedarray = new Uint8Array(this.result);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// 加载 PDF 文档</p>
+<p class="p1"><span class="Apple-converted-space">                </span>pdfjsLib.getDocument(typedarray).promise.then(pdfDoc_ =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>pdfDoc = pdfDoc_;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>document.querySelector('#page-count').textContent = pdfDoc.numPages;</p>
+<p class="p2"><span class="Apple-converted-space">                    </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>// 重置页码为1并渲染</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>pageNum = 1;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>renderPage(pageNum);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}).catch(err =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>console.error("PDF 加载错误: ", err);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>alert("加载 PDF 时出现错误。");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p1"><span class="Apple-converted-space">            </span>fileReader.readAsArrayBuffer(file);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// 绑定按钮事件</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelector('#prev-page').addEventListener('click', showPrevPage);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelector('#next-page').addEventListener('click', showNextPage);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
